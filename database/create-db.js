@@ -17,7 +17,7 @@ const {
 } = process.env
 
 async function createDb() {
-  if (!DB_USER || !DB_PASSWORD) {
+  if (!DB_USER) {
     throw new Error('Database credentials not properly configured in .env file')
   }
 
