@@ -76,3 +76,6 @@ La API estará disponible en `http://127.0.0.1:3333`.
 ## Endpoints disponibles
 
 - Este proyecto expone un CRUD completo para la gestión de usuarios como parte del sistema.
+
+> **Nota:** 
+> - Puedes importar la colección Postman incluida en `docs/gestion_proyectos.postman_collection.json`.
