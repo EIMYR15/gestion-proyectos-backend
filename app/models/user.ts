@@ -15,7 +15,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare id: number
 
   @column()
-  declare firstName: string
+  declare document: string
+
+  @column()
+  declare name: string
 
   @column()
   declare lastName: string
