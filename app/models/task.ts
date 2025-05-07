@@ -5,6 +5,27 @@ export default class Tarea extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
+  @column()
+  declare title: string
+
+  @column()
+  declare description: string
+
+  @column()
+  declare projectId: number
+
+  @column()
+  declare userId: number
+
+  @column()
+  declare priorityId: number
+
+  @column()
+  declare statuId: number
+
+  @column()
+  declare deadline: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
