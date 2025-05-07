@@ -6,6 +6,9 @@ export default class TypeDocument extends BaseModel {
   declare id: number
 
   @column()
+  declare abreviation: string
+
+  @column()
   declare name: string
 
   @column.dateTime({ autoCreate: true })
