@@ -5,6 +5,15 @@ export default class Comentario extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
+  @column()
+  declare userId: number
+
+  @column()
+  declare taskId: number
+
+  @column()
+  declare description: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
