@@ -4,7 +4,7 @@ import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {
   /**
-   * Display a list of resource
+   * Obtener todos los usuarios
    */
   async index({ response }: HttpContext) {
     const users = await User.all()
@@ -12,10 +12,19 @@ export default class UsersController {
   }
 
   /**
-   * Handle form submission for the create action
+   * Crear un nuevo usuario
    */
   async store({ request, response }: HttpContext) {
-    const data = request.only(['firstName', 'lastName', 'telephone', 'email', 'password'])
+    const data = request.only([
+      'typeDocumentId',
+      'document',
+      'name',
+      'lastName',
+      'telephone',
+      'email',
+      'username',
+      'password',
+    ])
 
     const user = await User.create({
       ...data,
@@ -26,26 +35,35 @@ export default class UsersController {
   }
 
   /**
-   * Show individual record
+   * Mostrar un usuario por ID
    */
   async show({ params, response }: HttpContext) {
     const user = await User.find(params.id)
     if (!user) {
-      return response.notFound({ message: 'User not found' })
+      return response.notFound({ message: 'Usuario no encontrado' })
     }
     return response.ok(user)
   }
 
   /**
-   * Handle form submission for the edit action
+   * Actualizar un usuario
    */
   async update({ params, request, response }: HttpContext) {
     const user = await User.find(params.id)
     if (!user) {
-      return response.notFound({ message: 'User not found' })
+      return response.notFound({ message: 'Usuario no encontrado' })
     }
 
-    const data = request.only(['firstName', 'lastName', 'telephone', 'email', 'password'])
+    const data = request.only([
+      'typeDocumentId',
+      'document',
+      'firstName',
+      'lastName',
+      'telephone',
+      'email',
+      'username',
+      'password',
+    ])
 
     user.merge({
       ...data,
@@ -53,17 +71,16 @@ export default class UsersController {
     })
 
     await user.save()
-
     return response.ok(user)
   }
 
   /**
-   * Delete record
+   * Eliminar un usuario
    */
   async destroy({ params, response }: HttpContext) {
     const user = await User.find(params.id)
     if (!user) {
-      return response.notFound({ message: 'User not found' })
+      return response.notFound({ message: 'Usuario no encontrado' })
     }
 
     await user.delete()
