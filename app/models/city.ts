@@ -6,7 +6,7 @@ export default class Ciudad extends BaseModel {
   declare id: number
 
   @column()
-  declare name: string
+  declare title: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

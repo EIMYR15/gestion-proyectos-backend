@@ -9,9 +9,9 @@ export default class extends BaseSchema {
 
       table.string('title').notNullable()
       table.string('description').notNullable()
-      table.string('user_id').unsigned().references('id').inTable('users')
-      table.string('statu_id').unsigned().references('id').inTable('status')
-      table.string('client_id').unsigned().references('id').inTable('users')
+      table.integer('user_id').unsigned().references('id').inTable('users')
+      table.integer('statu_id').unsigned().references('id').inTable('statuses')
+      table.integer('client_id').unsigned().references('id').inTable('users')
       table.string('start_date').notNullable()
       table.string('end_date').notNullable()
 
