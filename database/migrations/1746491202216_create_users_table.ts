@@ -9,8 +9,8 @@ export default class extends BaseSchema {
 
       table.integer('type_document_id').unsigned().references('id').inTable('type_documents')
       table.bigInteger('document').notNullable().unsigned()
-      table.string('firt_name').notNullable()
-      table.string('last_name').notNullable()
+      table.string('firstName').notNullable()
+      table.string('lastName').notNullable()
       table.string('email', 254).notNullable().unique()
       table.bigInteger('telephone').notNullable().unsigned()
       table.integer('city_id').unsigned().references('id').inTable('cities')
