@@ -5,10 +5,10 @@ export default class Proyecto extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
+  @column({ columnName: 'title' })
   declare title: string
 
-  @column()
+  @column({ columnName: 'description' })
   declare description: string
 
   @column()
@@ -20,11 +20,11 @@ export default class Proyecto extends BaseModel {
   @column()
   declare clientId: number
 
-  @column()
-  declare startDate: string
+  @column({ columnName: 'startDate' })
+  declare startDate: Date
 
-  @column()
-  declare endDate: string
+  @column({ columnName: 'endDate' })
+  declare endDate: Date
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

@@ -5,7 +5,7 @@ export default class Ciudad extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
+  @column({ columnName: 'title' })
   declare title: string
 
   @column.dateTime({ autoCreate: true })

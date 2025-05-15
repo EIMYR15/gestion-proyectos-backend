@@ -5,10 +5,10 @@ export default class Tarea extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
+  @column({ columnName: 'title' })
   declare title: string
 
-  @column()
+  @column({ columnName: 'description' })
   declare description: string
 
   @column()
@@ -23,8 +23,8 @@ export default class Tarea extends BaseModel {
   @column()
   declare statuId: number
 
-  @column()
-  declare deadline: string
+  @column({ columnName: 'deadline' })
+  declare deadline: Date
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

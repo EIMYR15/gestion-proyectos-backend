@@ -5,13 +5,13 @@ export default class Role extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
+  @column({ columnName: 'title' })
   declare title: string
 
-  @column()
+  @column({ columnName: 'description' })
   declare description: string
 
-  @column()
+  @column({ columnName: 'permissions' })
   declare permissions: string
 
   @column.dateTime({ autoCreate: true })

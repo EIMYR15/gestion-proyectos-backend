@@ -17,25 +17,25 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare typeDocumentId: string
 
-  @column()
-  declare document: string
+  @column({ columnName: 'document' })
+  declare document: number
 
-  @column()
+  @column({ columnName: 'firstName' })
   declare firstName: string
 
-  @column()
+  @column({ columnName: 'lastName' })
   declare lastName: string
 
-  @column()
-  declare telephone: string
+  @column({ columnName: 'telephone' })
+  declare telephone: number
 
   @column()
   declare cityId: string
 
-  @column()
+  @column({ columnName: 'email' })
   declare email: string
 
-  @column()
+  @column({ columnName: 'username' })
   declare username: string
 
   @column({ serializeAs: null })
