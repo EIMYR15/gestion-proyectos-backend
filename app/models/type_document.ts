@@ -5,10 +5,10 @@ export default class TypeDocument extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
+  @column({ columnName: 'abreviation' })
   declare abreviation: string
 
-  @column()
+  @column({ columnName: 'name' })
   declare name: string
 
   @column.dateTime({ autoCreate: true })

@@ -11,7 +11,7 @@ export default class Comentario extends BaseModel {
   @column()
   declare taskId: number
 
-  @column()
+  @column({ columnName: 'description' })
   declare description: string
 
   @column.dateTime({ autoCreate: true })

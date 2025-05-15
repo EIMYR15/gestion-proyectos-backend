@@ -12,8 +12,8 @@ export default class extends BaseSchema {
       table.integer('user_id').unsigned().references('id').inTable('users')
       table.integer('statu_id').unsigned().references('id').inTable('statuses')
       table.integer('client_id').unsigned().references('id').inTable('users')
-      table.string('start_date').notNullable()
-      table.string('end_date').notNullable()
+      table.date('start_date').notNullable()
+      table.date('end_date').notNullable()
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
