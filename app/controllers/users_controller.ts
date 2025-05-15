@@ -18,9 +18,10 @@ export default class UsersController {
     const data = request.only([
       'typeDocumentId',
       'document',
-      'name',
+      'firtsName',
       'lastName',
       'telephone',
+      'cityId',
       'email',
       'username',
       'password',
