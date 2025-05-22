@@ -10,7 +10,7 @@ export default class CiudadesController {
 
   // Crear una nueva ciudad
   public async store({ request, response }: HttpContext) {
-    const data = request.only(['name'])
+    const data = request.only(['title'])
     const ciudad = await Ciudad.create(data)
     return response.created(ciudad)
   }
@@ -31,7 +31,7 @@ export default class CiudadesController {
       return response.notFound({ message: 'Ciudad no encontrada' })
     }
 
-    const data = request.only(['name'])
+    const data = request.only(['title'])
     ciudad.merge(data)
     await ciudad.save()
     return response.ok(ciudad)
