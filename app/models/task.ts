@@ -29,9 +29,6 @@ export default class Task extends BaseModel {
   @column()
   declare statuId: number
 
-  @column()
-  declare commentId: number
-
   @column({ columnName: 'deadline' })
   declare deadline: Date
 

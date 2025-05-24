@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
 import User from '#models/user'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Task from '#models/task'
 
 export default class Comment extends BaseModel {
@@ -23,13 +23,15 @@ export default class Comment extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @hasMany(() => User, {
+  // Relation with User
+  @belongsTo(() => User, {
     foreignKey: 'userId',
   })
-  declare users: HasMany<typeof User>
+  declare user: BelongsTo<typeof User>
 
-  @hasMany(() => Task, {
+  // Relation with Task
+  @belongsTo(() => Task, {
     foreignKey: 'taskId',
   })
-  declare tasks: HasMany<typeof Task>
+  declare task: BelongsTo<typeof Task>
 }

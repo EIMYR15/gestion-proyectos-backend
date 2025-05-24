@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-
+// status / statuses
 export default class Statu extends BaseModel {
   @column({ isPrimary: true })
   declare id: number

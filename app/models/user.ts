@@ -63,7 +63,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare city: BelongsTo<typeof City>
 
   @manyToMany(() => Role, {
-    pivotTable: 'role_user',
+    pivotTable: 'role_users',
     localKey: 'id',
     pivotForeignKey: 'user_id',
     relatedKey: 'id',

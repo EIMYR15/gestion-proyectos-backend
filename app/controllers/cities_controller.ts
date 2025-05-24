@@ -4,7 +4,7 @@ import Ciudad from '#models/city'
 export default class CiudadesController {
   // Listar todas las ciudades
   public async index({ response }: HttpContext) {
-    const ciudades = await Ciudad.all()
+    const ciudades = await Ciudad.query().preload('users')
     return response.ok(ciudades)
   }
 
