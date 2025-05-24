@@ -15,9 +15,4 @@ export default class City extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
-
-  @hasMany(() => User, {
-    foreignKey: 'cityId',
-  })
-  declare users: HasMany<typeof User>
 }

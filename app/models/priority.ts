@@ -11,8 +11,8 @@ export default class Priority extends BaseModel {
   @column({ columnName: 'description' })
   declare description: string
 
-  @column()
-  declare typeId: number
+  @column({ columnName: 'type' })
+  declare type: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

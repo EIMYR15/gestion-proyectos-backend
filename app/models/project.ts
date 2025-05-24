@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
-import Statu from '#models/statu'
+import Statu from '#models/status'
 import HistoryStatu from '#models/history_statu'
-import Task from './task.js'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -43,15 +43,15 @@ export default class Project extends BaseModel {
   })
   declare users: HasMany<typeof User>
 
-  @hasMany(() => Statu, {
+  @belongsTo(() => Statu, {
     foreignKey: 'statuId',
   })
-  declare status: HasMany<typeof Statu>
+  declare status: BelongsTo<typeof Statu>
 
-  @hasMany(() => User, {
+  @belongsTo(() => User, {
     foreignKey: 'clientId',
   })
-  declare clients: HasMany<typeof User>
+  declare clients: BelongsTo<typeof User>
 
   @manyToMany(() => HistoryStatu, {
     pivotTable: 'history_statu',
@@ -61,10 +61,4 @@ export default class Project extends BaseModel {
     pivotRelatedForeignKey: 'statuId',
   })
   declare historyStatus: ManyToMany<typeof HistoryStatu>
-
-  @manyToMany(() => Task, {
-    pivotTable: 'task',
-    localKey: 'id',
-  })
-  declare tasks: ManyToMany<typeof Task>
 }
