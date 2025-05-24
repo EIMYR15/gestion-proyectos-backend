@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
+import User from '#models/user'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+import Task from '#models/task'
 
 export default class Comment extends BaseModel {
   @column({ isPrimary: true })
@@ -19,4 +22,14 @@ export default class Comment extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @hasMany(() => User, {
+    foreignKey: 'userId',
+  })
+  declare users: HasMany<typeof User>
+
+  @hasMany(() => Task, {
+    foreignKey: 'taskId',
+  })
+  declare tasks: HasMany<typeof Task>
 }

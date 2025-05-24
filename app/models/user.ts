@@ -1,9 +1,14 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, belongsTo, column, manyToMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import Role from '#models/role'
+import City from '#models/city'
+import TypeDocument from '#models/type_document'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -15,7 +20,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare id: number
 
   @column()
-  declare typeDocumentId: string
+  declare typeDocumentId: number
 
   @column({ columnName: 'document' })
   declare document: number
@@ -30,7 +35,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare telephone: number
 
   @column()
-  declare cityId: string
+  declare cityId: number
 
   @column({ columnName: 'email' })
   declare email: string
@@ -47,5 +52,30 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
-  static accessTokens = DbAccessTokensProvider.forModel(User)
+  @belongsTo(() => TypeDocument, {
+    foreignKey: 'typeDocumentId',
+  })
+  declare typeDocument: BelongsTo<typeof TypeDocument>
+
+  @belongsTo(() => City, {
+    foreignKey: 'cityId',
+  })
+  declare city: BelongsTo<typeof City>
+
+  @manyToMany(() => Role, {
+    pivotTable: 'role_user',
+    localKey: 'id',
+    pivotForeignKey: 'user_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'role_id',
+  })
+  declare roles: ManyToMany<typeof Role>
+
+  static accessTokens = DbAccessTokensProvider.forModel(User, {
+    expiresIn: '30 days',
+    prefix: 'oat_',
+    table: 'auth_access_tokens',
+    type: 'auth_token',
+    tokenSecretLength: 40,
+  })
 }

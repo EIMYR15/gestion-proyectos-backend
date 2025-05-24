@@ -13,6 +13,7 @@ export default class extends BaseSchema {
       table.integer('user_id').unsigned().references('id').inTable('users')
       table.integer('priority_id').unsigned().references('id').inTable('priorities')
       table.integer('status_id').unsigned().references('id').inTable('statuses')
+      table.integer('comment_id').unsigned().references('id').inTable('comments')
       table.date('deadline').notNullable()
 
       table.timestamp('created_at')
