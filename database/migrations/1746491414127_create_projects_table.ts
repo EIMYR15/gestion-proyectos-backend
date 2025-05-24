@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.string('title').notNullable()
       table.string('description').notNullable()
       table.integer('user_id').unsigned().references('id').inTable('users')
-      table.integer('statu_id').unsigned().references('id').inTable('statuses')
+      table.integer('status_id').unsigned().references('id').inTable('statuses')
       table.integer('client_id').unsigned().references('id').inTable('users')
       table.date('start_date').notNullable()
       table.date('end_date').notNullable()

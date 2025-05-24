@@ -9,7 +9,7 @@ export default class extends BaseSchema {
 
       table.string('title').notNullable()
       table.string('description').notNullable()
-      table.string('type').notNullable()
+      table.integer('type_Id').unsigned().references('id').inTable('types')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
