@@ -7,7 +7,7 @@ export default class UsersController {
    * Obtener todos los usuarios
    */
   async index({ response }: HttpContext) {
-    const users = await User.all()
+    const users = await User.query().preload('roles')
     return response.ok(users)
   }
 
@@ -16,30 +16,35 @@ export default class UsersController {
    */
   async store({ request, response }: HttpContext) {
     const data = request.only([
-      'typeDocumentId',
+      //'typeDocumentId',
       'document',
       'firstName',
       'lastName',
       'telephone',
-      'cityId',
+      //'cityId',
       'email',
       'username',
       'password',
     ])
 
-    const user = await User.create({
+    const newUser = await User.create({
       ...data,
       password: await hash.make(data.password),
     })
 
-    return response.created(user)
+    const roles = request.input('roles')
+    if (roles && Array.isArray(roles)) {
+      await newUser.related('roles').sync(roles)
+    }
+
+    return response.created(newUser)
   }
 
   /**
    * Mostrar un usuario por ID
    */
   async show({ params, response }: HttpContext) {
-    const user = await User.find(params.id)
+    const user = await User.query().where('id', params.id).preload('roles').first()
     if (!user) {
       return response.notFound({ message: 'Usuario no encontrado' })
     }
@@ -70,8 +75,13 @@ export default class UsersController {
       ...data,
       ...(data.password ? { password: await hash.make(data.password) } : {}),
     })
-
     await user.save()
+
+    const roles = request.input('roles')
+    if (roles && Array.isArray(roles)) {
+      await user.related('roles').sync(roles)
+    }
+
     return response.ok(user)
   }
 
