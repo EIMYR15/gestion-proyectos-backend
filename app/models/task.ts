@@ -1,12 +1,10 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
-import Statu from '#models/status'
 import User from '#models/user'
 import Priority from '#models/priority'
 import Project from '#models/project'
-import Comment from '#models/comment'
-import Status from '#models/status'
+import Status from '#models/statu'
 
 export default class Task extends BaseModel {
   @column({ isPrimary: true })
@@ -42,7 +40,7 @@ export default class Task extends BaseModel {
   @hasMany(() => Status, {
     foreignKey: 'statusId',
   })
-  declare status: HasMany<typeof Statu>
+  declare status: HasMany<typeof Status>
 
   @hasMany(() => User, {
     foreignKey: 'userId',

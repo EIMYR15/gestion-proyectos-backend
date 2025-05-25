@@ -4,7 +4,7 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
-import Statu from '#models/status'
+import Status from '#models/statu'
 import HistoryStatu from '#models/history_statu'
 
 export default class Project extends BaseModel {
@@ -43,10 +43,10 @@ export default class Project extends BaseModel {
   })
   declare users: HasMany<typeof User>
 
-  @belongsTo(() => Statu, {
+  @belongsTo(() => Status, {
     foreignKey: 'statuId',
   })
-  declare status: BelongsTo<typeof Statu>
+  declare status: BelongsTo<typeof Status>
 
   @belongsTo(() => User, {
     foreignKey: 'clientId',
