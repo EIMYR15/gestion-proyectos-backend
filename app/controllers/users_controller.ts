@@ -1,6 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
-import hash from '@adonisjs/core/services/hash'
 
 export default class UsersController {
   /**
@@ -27,10 +26,7 @@ export default class UsersController {
       'password',
     ])
 
-    const newUser = await User.create({
-      ...data,
-      password: await hash.make(data.password),
-    })
+    const newUser = await User.create(data)
 
     const roles = request.input('roles')
     if (roles && Array.isArray(roles)) {
@@ -71,10 +67,8 @@ export default class UsersController {
       'password',
     ])
 
-    user.merge({
-      ...data,
-      ...(data.password ? { password: await hash.make(data.password) } : {}),
-    })
+    user.merge(data)
+
     await user.save()
 
     const roles = request.input('roles')
