@@ -6,9 +6,11 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.integer('status_id').unsigned().references('id').inTable('statuses').onDelete('CASCADE')
+      table.string('entity_type').notNullable() // Stores the model type (e.g., 'Task', 'Project')
+      table.integer('entity_id').unsigned().notNullable() // Stores the related model's ID
+      table.timestamp('created_at').defaultTo(this.now())
+      table.timestamp('updated_at').defaultTo(this.now())
     })
   }
 

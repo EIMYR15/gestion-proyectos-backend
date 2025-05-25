@@ -1,11 +1,11 @@
+import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import Status from '#models/Status'
+import User from '#models/User'
+import Priority from '#models/Priority'
+import Project from '#models/Project'
+import Comment from '#models/Comment'
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
-import Statu from '#models/statu'
-import User from '#models/user'
-import Priority from '#models/priority'
-import Project from '#models/project'
-import Comment from '#models/comment'
 
 export default class Task extends BaseModel {
   @column({ isPrimary: true })
@@ -27,10 +27,10 @@ export default class Task extends BaseModel {
   declare priorityId: number
 
   @column()
-  declare statuId: number
+  declare statusId: number
 
-  @column({ columnName: 'deadline' })
-  declare deadline: Date
+  @column({ columnName: 'due_date' })
+  declare dueDate: Date
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -38,28 +38,33 @@ export default class Task extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @hasMany(() => Statu, {
-    foreignKey: 'statuId',
-  })
-  declare status: HasMany<typeof Statu>
-
-  @hasMany(() => User, {
-    foreignKey: 'userId',
-  })
-  declare users: HasMany<typeof User>
-
-  @hasMany(() => Priority, {
-    foreignKey: 'priorityId',
-  })
-  declare priorities: HasMany<typeof Priority>
-
-  @hasMany(() => Project, {
+  // Relation with Project
+  @belongsTo(() => Project, {
     foreignKey: 'projectId',
   })
-  declare projects: HasMany<typeof Project>
+  declare project: BelongsTo<typeof Project>
 
+  // Relation with User
+  @belongsTo(() => User, {
+    foreignKey: 'userId',
+  })
+  declare user: BelongsTo<typeof User>
+
+  // Relation with Priority
+  @belongsTo(() => Priority, {
+    foreignKey: 'priorityId',
+  })
+  declare priority: BelongsTo<typeof Priority>
+
+  // Relation with Status
+  @belongsTo(() => Status, {
+    foreignKey: 'statusId',
+  })
+  declare status: BelongsTo<typeof Status>
+
+  // Relation with Comments
   @hasMany(() => Comment, {
-    foreignKey: 'commentId',
+    foreignKey: 'taskId',
   })
   declare comments: HasMany<typeof Comment>
 }

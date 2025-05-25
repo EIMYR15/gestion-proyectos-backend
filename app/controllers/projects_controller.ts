@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Proyecto from '#models/project'
+import Proyecto from '#models/Project'
 
 export default class ProjectsController {
   // Get all projects

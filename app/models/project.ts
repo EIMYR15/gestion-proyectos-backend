@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany, manyToMany } from '@adonisjs/lucid/orm'
-import type { HasMany } from '@adonisjs/lucid/types/relations'
-import type { ManyToMany } from '@adonisjs/lucid/types/relations'
-import User from '#models/user'
-import Statu from '#models/statu'
-import HistoryStatu from '#models/history_statu'
-import Task from './task.js'
+import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
+import User from '#models/User'
+import Status from '#models/Status'
+import HistoryStatus from '#models/HistoryStatus'
+import Task from '#models/Task'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -21,15 +20,15 @@ export default class Project extends BaseModel {
   declare userId: number
 
   @column()
-  declare statuId: number
+  declare statusId: number
 
   @column()
   declare clientId: number
 
-  @column({ columnName: 'startDate' })
+  @column({ columnName: 'start_date' })
   declare startDate: Date
 
-  @column({ columnName: 'endDate' })
+  @column({ columnName: 'end_date' })
   declare endDate: Date
 
   @column.dateTime({ autoCreate: true })
@@ -38,33 +37,34 @@ export default class Project extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  @hasMany(() => User, {
+  // Relation with the user who created the project
+  @belongsTo(() => User, {
     foreignKey: 'userId',
   })
-  declare users: HasMany<typeof User>
+  declare user: BelongsTo<typeof User>
 
-  @hasMany(() => Statu, {
-    foreignKey: 'statuId',
+  // Relation with the status of the project
+  @belongsTo(() => Status, {
+    foreignKey: 'statusId',
   })
-  declare status: HasMany<typeof Statu>
+  declare status: BelongsTo<typeof Status>
 
-  @hasMany(() => User, {
+  // Relation with the client of the project
+  @belongsTo(() => User, {
     foreignKey: 'clientId',
   })
-  declare clients: HasMany<typeof User>
+  declare client: BelongsTo<typeof User>
 
-  @manyToMany(() => HistoryStatu, {
-    pivotTable: 'history_statu',
-    localKey: 'id',
-    pivotForeignKey: 'projectId',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'statuId',
+  // Relation with history statuses
+  @hasMany(() => HistoryStatus, {
+    foreignKey: 'entityId',
+    onQuery: (query) => query.where('entity_type', 'Project'),
   })
-  declare historyStatus: ManyToMany<typeof HistoryStatu>
+  declare historyStatuses: HasMany<typeof HistoryStatus>
 
-  @manyToMany(() => Task, {
-    pivotTable: 'task',
-    localKey: 'id',
+  // Relation with tasks
+  @hasMany(() => Task, {
+    foreignKey: 'projectId',
   })
-  declare tasks: ManyToMany<typeof Task>
+  declare tasks: HasMany<typeof Task>
 }

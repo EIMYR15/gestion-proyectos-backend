@@ -1,17 +1,18 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-
-export default class RoleUser extends BaseModel {
-  static table = 'role_users';
-
+// status / statuses
+export default class Status extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
-  declare userId: number
+  @column({ columnName: 'title' })
+  declare title: string
+
+  @column({ columnName: 'description' })
+  declare description: string
 
   @column()
-  declare roleId: number
+  declare type: 'task' | 'project' // Enum type to match the migration
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

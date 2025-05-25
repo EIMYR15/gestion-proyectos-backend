@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Role from '#models/role'
+import Role from '#models/Role'
 
 export default class RolesController {
   // Get all roles

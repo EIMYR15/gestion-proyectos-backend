@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Prioridad from '#models/priority'
+import Prioridad from '#models/Priority'
 
 export default class PrioritiesController {
   // Get all priorities

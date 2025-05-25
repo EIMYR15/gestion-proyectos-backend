@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import TypeDocument from '#models/type_document'
+import TypeDocument from '#models/TypeDocument'
 
 export default class TypeDocumentsController {
   // Get all type documents

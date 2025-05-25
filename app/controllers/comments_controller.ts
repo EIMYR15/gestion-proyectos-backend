@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Comentario from '#models/comment'
+import Comentario from '#models/Comment'
 
 export default class CommentsController {
   // Get all comments
