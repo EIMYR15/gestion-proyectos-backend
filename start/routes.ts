@@ -8,6 +8,7 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import { middleware } from './kernel.js'
 const UsersController = () => import('#controllers/users_controller')
 const RolesController = () => import('#controllers/roles_controller')
 const ProjectsController = () => import('#controllers/projects_controller')
@@ -17,6 +18,7 @@ const CommentsController = () => import('#controllers/comments_controller')
 const TasksController = () => import('#controllers/tasks_controller')
 const PrioritiesController = () => import('#controllers/priorities_controller')
 const TypesDocumentsController = () => import('#controllers/type_documents_controller')
+const AuthController = () => import('#controllers/auth_controller')
 
 router.get('/', async () => {
   return {
@@ -27,7 +29,7 @@ router.get('/', async () => {
 //Users Route (rutas de usuarios)
 router
   .group(() => {
-    router.get('/', [UsersController, 'index'])
+    router.get('/', [UsersController, 'index']).use(middleware.auth({ guards: ['api'] }))
     router.post('/', [UsersController, 'store'])
     router.get('/:id', [UsersController, 'show'])
     router.put('/:id', [UsersController, 'update'])
@@ -118,3 +120,10 @@ router
     router.delete('/:id', [TypesDocumentsController, 'destroy'])
   })
   .prefix('/api/types_documents')
+
+router
+  .group(() => {
+    router.post('/login', [AuthController, 'login'])
+    // router.post('/reset-password', [AuthController, 'resetPassword'])
+  })
+  .prefix('/api/auth')
