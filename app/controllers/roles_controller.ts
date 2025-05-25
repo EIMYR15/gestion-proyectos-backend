@@ -3,8 +3,11 @@ import Role from '#models/Role'
 
 export default class RolesController {
   // Get all roles
-  async index({ response }: HttpContext) {
-    const roles = await Role.all()
+  async index({ request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Role.query()
+    if (withRelations.includes('users')) query.preload('users')
+    const roles = await query
     return response.ok(roles)
   }
 
@@ -16,8 +19,11 @@ export default class RolesController {
   }
 
   // Get a single role by ID
-  async show({ params, response }: HttpContext) {
-    const role = await Role.find(params.id)
+  async show({ params, request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Role.query().where('id', params.id)
+    if (withRelations.includes('users')) query.preload('users')
+    const role = await query.first()
     if (!role) {
       return response.notFound({ message: 'Role not found' })
     }

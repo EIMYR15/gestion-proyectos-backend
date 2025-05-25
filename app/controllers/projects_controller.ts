@@ -3,8 +3,15 @@ import Proyecto from '#models/Project'
 
 export default class ProjectsController {
   // Get all projects
-  async index({ response }: HttpContext) {
-    const projects = await Proyecto.all()
+  async index({ request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Proyecto.query()
+    if (withRelations.includes('user')) query.preload('user')
+    if (withRelations.includes('status')) query.preload('status')
+    if (withRelations.includes('client')) query.preload('client')
+    if (withRelations.includes('historyStatuses')) query.preload('historyStatuses')
+    if (withRelations.includes('tasks')) query.preload('tasks')
+    const projects = await query
     return response.ok(projects)
   }
 
@@ -24,8 +31,15 @@ export default class ProjectsController {
   }
 
   // Get a single project by ID
-  async show({ params, response }: HttpContext) {
-    const project = await Proyecto.find(params.id)
+  async show({ params, request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Proyecto.query().where('id', params.id)
+      if(withRelations.includes('user'))query.preload('user')
+      if(withRelations.includes('status'))query.preload('status')
+      if(withRelations.includes('client'))query.preload('client')
+      if(withRelations.includes('historyStatuses'))query.preload('historyStatuses')
+      if(withRelations.includes('tasks'))query.preload('tasks')
+      const project = await query.first()
     if (!project) {
       return response.notFound({ message: 'Project not found' })
     }
