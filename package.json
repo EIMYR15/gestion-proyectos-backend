@@ -12,8 +12,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "typecheck": "tsc --noEmit",
-    "app:init": "node ace generate:key && node database/create-db.js && node ace migration:run",
-    "db:init": "node database/create-db.js && node ace migration:run"
+    "app:init": "node ace generate:key && node database/create-db.js && node ace migration:run && node ace db:seed",
+    "db:init": "node database/create-db.js && node ace migration:run && node ace db:seed"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
