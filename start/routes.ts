@@ -29,7 +29,7 @@ router.get('/', async () => {
 //Users Route (rutas de usuarios)
 router
   .group(() => {
-    router.get('/', [UsersController, 'index']).use(middleware.auth({ guards: ['api'] }))
+    router.get('/', [UsersController, 'index'])//.use(middleware.auth({ guards: ['api'] }))
     router.post('/', [UsersController, 'store'])
     router.get('/:id', [UsersController, 'show'])
     router.put('/:id', [UsersController, 'update'])

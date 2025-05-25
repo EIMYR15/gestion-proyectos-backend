@@ -5,8 +5,13 @@ export default class UsersController {
   /**
    * Obtener todos los usuarios
    */
-  async index({ response }: HttpContext) {
-    const users = await User.query().preload('roles')
+  async index({ request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(",").map((r: string) => r.trim()).filter(Boolean)
+    const query = User.query()
+    if (withRelations.includes('roles')) query.preload('roles')
+    if (withRelations.includes('typeDocument')) query.preload('typeDocument')
+    if (withRelations.includes('city')) query.preload('city')
+    const users = await query
     return response.ok(users)
   }
 
@@ -15,12 +20,12 @@ export default class UsersController {
    */
   async store({ request, response }: HttpContext) {
     const data = request.only([
-      //'typeDocumentId',
+      'typeDocumentId',
       'document',
       'firstName',
       'lastName',
       'telephone',
-      //'cityId',
+      'cityId',
       'email',
       'username',
       'password',
@@ -39,8 +44,13 @@ export default class UsersController {
   /**
    * Mostrar un usuario por ID
    */
-  async show({ params, response }: HttpContext) {
-    const user = await User.query().where('id', params.id).preload('roles').first()
+  async show({ params, request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = User.query().where('id', params.id)
+    if (withRelations.includes('roles')) query.preload('roles')
+    if (withRelations.includes('typeDocument')) query.preload('typeDocument')
+    if (withRelations.includes('city')) query.preload('city')
+    const user = await query.first()
     if (!user) {
       return response.notFound({ message: 'Usuario no encontrado' })
     }

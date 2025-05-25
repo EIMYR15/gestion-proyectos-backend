@@ -37,4 +37,9 @@ export const http = defineConfig({
     secure: app.inProduction,
     sameSite: 'lax',
   },
+  qs: {
+    parse:{
+      comma:false
+    }
+  }
 })

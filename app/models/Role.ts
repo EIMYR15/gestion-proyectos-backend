@@ -23,7 +23,7 @@ export default class Role extends BaseModel {
   declare updatedAt: DateTime
 
   @manyToMany(() => User, {
-    pivotTable: 'user_roles',
+    pivotTable: 'role_users',
     localKey: 'id',
     pivotForeignKey: 'role_id',
     relatedKey: 'id',

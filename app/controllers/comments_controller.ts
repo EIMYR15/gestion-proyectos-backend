@@ -3,8 +3,12 @@ import Comentario from '#models/Comment'
 
 export default class CommentsController {
   // Get all comments
-  async index({ response }: HttpContext) {
-    const comments = await Comentario.all()
+  async index({ request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Comentario.query()
+    if (withRelations.includes('user')) query.preload('user')
+    if (withRelations.includes('task')) query.preload('task')
+    const comments = await query
     return response.ok(comments)
   }
 
@@ -16,8 +20,12 @@ export default class CommentsController {
   }
 
   // Get a single comment by ID
-  async show({ params, response }: HttpContext) {
-    const comment = await Comentario.find(params.id)
+  async show({ params, request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Comentario.query().where('id', params.id)
+    if (withRelations.includes('user')) query.preload('user')
+    if (withRelations.includes('task')) query.preload('task')
+    const comment = await query.first()
     if (!comment) {
       return response.notFound({ message: 'Comment not found' })
     }

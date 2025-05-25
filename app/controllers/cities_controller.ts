@@ -3,8 +3,11 @@ import Ciudad from '#models/City'
 
 export default class CiudadesController {
   // Listar todas las ciudades
-  public async index({ response }: HttpContext) {
-    const ciudades = await Ciudad.query().preload('users')
+  public async index({ request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Ciudad.query()
+    if (withRelations.includes('users')) query.preload('users' as any)
+    const ciudades = await query
     return response.ok(ciudades)
   }
 
@@ -16,12 +19,15 @@ export default class CiudadesController {
   }
 
   // Mostrar una ciudad por ID
-  public async show({ params, response }: HttpContext) {
-    const ciudad = await Ciudad.find(params.id)
-    if (!ciudad) {
+  public async show({ params, request, response }: HttpContext) {
+    const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const query = Ciudad.query().where('id', params.id)
+    if (withRelations.includes('users')) query.preload('users' as any)
+    const ciudadResult = await query.first()
+    if (!ciudadResult) {
       return response.notFound({ message: 'Ciudad no encontrada' })
     }
-    return response.ok(ciudad)
+    return response.ok(ciudadResult)
   }
 
   // Actualizar una ciudad por ID
