@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
-
+import { BaseModel, column } from '@adonisjs/lucid/orm'
 
 export default class City extends BaseModel {
   @column({ isPrimary: true })
