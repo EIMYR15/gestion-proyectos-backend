@@ -12,7 +12,7 @@ export default class Priority extends BaseModel {
   declare description: string
 
   @column()
-  declare typeId: number
+  declare type: 'task' | 'project' // Enum type to match the migration
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

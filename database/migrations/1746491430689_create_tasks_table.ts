@@ -13,8 +13,9 @@ export default class extends BaseSchema {
       table.integer('user_id').unsigned().references('id').inTable('users')
       table.integer('priority_id').unsigned().references('id').inTable('priorities')
       table.integer('status_id').unsigned().references('id').inTable('statuses')
-      table.date('deadline').notNullable()
-
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('task_id').unsigned().references('id').inTable('tasks').onDelete('CASCADE')
+      table.date('due_date').notNullable()
       table.timestamp('created_at')
       table.timestamp('updated_at')
     })

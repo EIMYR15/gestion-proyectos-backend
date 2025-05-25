@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Tarea from '#models/task'
+import Tarea from '#models/Task'
 
 export default class TasksController {
   // Get all tasks

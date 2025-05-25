@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Ciudad from '#models/city'
+import Ciudad from '#models/City'
 
 export default class CiudadesController {
   // Listar todas las ciudades

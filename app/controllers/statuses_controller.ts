@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Estado from '#models/statu'
+import Estado from '#models/Status'
 
 export default class StatusesController {
   // Get all statuses
