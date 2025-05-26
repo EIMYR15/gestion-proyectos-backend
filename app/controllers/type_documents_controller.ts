@@ -10,7 +10,7 @@ export default class TypeDocumentsController {
 
   // Create a new type document
   async store({ request, response }: HttpContext) {
-    const data = request.only(['abbreviation', 'name'])
+    const data = request.only(['abbreviation', 'title'])
     const document = await TypeDocument.create(data)
     return response.created(document)
   }
@@ -31,7 +31,7 @@ export default class TypeDocumentsController {
       return response.notFound({ message: 'Type document not found' })
     }
 
-    const data = request.only(['abbreviation', 'name'])
+    const data = request.only(['abbreviation', 'title'])
     document.merge(data)
     await document.save()
 
