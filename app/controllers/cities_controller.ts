@@ -1,11 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Ciudad from '#models/City'
+import City from '#models/City'
 
-export default class CiudadesController {
+export default class CitiesController {
   // Listar todas las ciudades
   public async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
-    const query = Ciudad.query()
+    const query = City.query()
     if (withRelations.includes('users')) query.preload('users' as any)
     const ciudades = await query
     return response.ok(ciudades)
@@ -14,14 +14,14 @@ export default class CiudadesController {
   // Crear una nueva ciudad
   public async store({ request, response }: HttpContext) {
     const data = request.only(['title'])
-    const ciudad = await Ciudad.create(data)
+    const ciudad = await City.create(data)
     return response.created(ciudad)
   }
 
   // Mostrar una ciudad por ID
   public async show({ params, request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
-    const query = Ciudad.query().where('id', params.id)
+    const query = City.query().where('id', params.id)
     if (withRelations.includes('users')) query.preload('users' as any)
     const ciudadResult = await query.first()
     if (!ciudadResult) {
@@ -32,7 +32,7 @@ export default class CiudadesController {
 
   // Actualizar una ciudad por ID
   public async update({ params, request, response }: HttpContext) {
-    const ciudad = await Ciudad.find(params.id)
+    const ciudad = await City.find(params.id)
     if (!ciudad) {
       return response.notFound({ message: 'Ciudad no encontrada' })
     }
@@ -45,7 +45,7 @@ export default class CiudadesController {
 
   // Eliminar una ciudad por ID
   public async destroy({ params, response }: HttpContext) {
-    const ciudad = await Ciudad.find(params.id)
+    const ciudad = await City.find(params.id)
     if (!ciudad) {
       return response.notFound({ message: 'Ciudad no encontrada' })
     }

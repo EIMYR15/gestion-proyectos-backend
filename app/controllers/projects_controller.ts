@@ -1,11 +1,11 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Proyecto from '#models/Project'
+import Project from '#models/Project'
 
 export default class ProjectsController {
   // Get all projects
   async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
-    const query = Proyecto.query()
+    const query = Project.query()
     if (withRelations.includes('user')) query.preload('user')
     if (withRelations.includes('status')) query.preload('status')
     if (withRelations.includes('client')) query.preload('client')
@@ -26,14 +26,14 @@ export default class ProjectsController {
       'startDate',
       'endDate',
     ])
-    const project = await Proyecto.create(data)
+    const project = await Project.create(data)
     return response.created(project)
   }
 
   // Get a single project by ID
   async show({ params, request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
-    const query = Proyecto.query().where('id', params.id)
+    const query = Project.query().where('id', params.id)
       if(withRelations.includes('user'))query.preload('user')
       if(withRelations.includes('status'))query.preload('status')
       if(withRelations.includes('client'))query.preload('client')
@@ -48,7 +48,7 @@ export default class ProjectsController {
 
   // Update a project by ID
   async update({ params, request, response }: HttpContext) {
-    const project = await Proyecto.find(params.id)
+    const project = await Project.find(params.id)
     if (!project) {
       return response.notFound({ message: 'Project not found' })
     }
@@ -70,7 +70,7 @@ export default class ProjectsController {
 
   // Delete a project by ID
   async destroy({ params, response }: HttpContext) {
-    const project = await Proyecto.find(params.id)
+    const project = await Project.find(params.id)
     if (!project) {
       return response.notFound({ message: 'Project not found' })
     }

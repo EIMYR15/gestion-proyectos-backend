@@ -1,23 +1,23 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import Estado from '#models/Status'
+import Status from '#models/Status'
 
 export default class StatusesController {
   // Get all statuses
   async index({ response }: HttpContext) {
-    const statuses = await Estado.all()
+    const statuses = await Status.all()
     return response.ok(statuses)
   }
 
   // Create a new status
   async store({ request, response }: HttpContext) {
     const data = request.only(['title', 'description', 'type'])
-    const status = await Estado.create(data)
+    const status = await Status.create(data)
     return response.created(status)
   }
 
   // Get a single status by ID
   async show({ params, response }: HttpContext) {
-    const status = await Estado.find(params.id)
+    const status = await Status.find(params.id)
     if (!status) {
       return response.notFound({ message: 'Status not found' })
     }
@@ -26,7 +26,7 @@ export default class StatusesController {
 
   // Update a status by ID
   async update({ params, request, response }: HttpContext) {
-    const status = await Estado.find(params.id)
+    const status = await Status.find(params.id)
     if (!status) {
       return response.notFound({ message: 'Status not found' })
     }
@@ -40,7 +40,7 @@ export default class StatusesController {
 
   // Delete a status by ID
   async destroy({ params, response }: HttpContext) {
-    const status = await Estado.find(params.id)
+    const status = await Status.find(params.id)
     if (!status) {
       return response.notFound({ message: 'Status not found' })
     }
