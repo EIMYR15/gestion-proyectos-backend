@@ -75,6 +75,7 @@ export default class UsersController {
       'email',
       'username',
       'password',
+      'cityId',
     ])
 
     user.merge(data)
