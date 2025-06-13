@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import TypeDocument from '#models/TypeDocument'
+import { createTypeDocumentValidator, updateTypeDocumentValidator } from '#validators/type_document'
 
 export default class TypeDocumentsController {
   // Get all type documents
@@ -10,8 +11,8 @@ export default class TypeDocumentsController {
 
   // Create a new type document
   async store({ request, response }: HttpContext) {
-    const data = request.only(['abbreviation', 'title'])
-    const document = await TypeDocument.create(data)
+    const payload = await request.validateUsing(createTypeDocumentValidator)
+    const document = await TypeDocument.create(payload)
     return response.created(document)
   }
 
@@ -30,11 +31,9 @@ export default class TypeDocumentsController {
     if (!document) {
       return response.notFound({ message: 'Type document not found' })
     }
-
-    const data = request.only(['abbreviation', 'title'])
-    document.merge(data)
+    const payload = await request.validateUsing(updateTypeDocumentValidator)
+    document.merge(payload)
     await document.save()
-
     return response.ok(document)
   }
 
@@ -44,7 +43,6 @@ export default class TypeDocumentsController {
     if (!document) {
       return response.notFound({ message: 'Type document not found' })
     }
-
     await document.delete()
     return response.ok({ message: 'Type document deleted successfully' })
   }

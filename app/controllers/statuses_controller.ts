@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Status from '#models/Status'
+import { createStatusValidator, updateStatusValidator } from '#validators/status'
 
 export default class StatusesController {
   // Get all statuses
@@ -10,8 +11,8 @@ export default class StatusesController {
 
   // Create a new status
   async store({ request, response }: HttpContext) {
-    const data = request.only(['title', 'description', 'type'])
-    const status = await Status.create(data)
+    const payload = await request.validateUsing(createStatusValidator)
+    const status = await Status.create(payload)
     return response.created(status)
   }
 
@@ -30,11 +31,9 @@ export default class StatusesController {
     if (!status) {
       return response.notFound({ message: 'Status not found' })
     }
-
-    const data = request.only(['title', 'description', 'type'])
-    status.merge(data)
+    const payload = await request.validateUsing(updateStatusValidator)
+    status.merge(payload)
     await status.save()
-
     return response.ok(status)
   }
 
@@ -44,7 +43,6 @@ export default class StatusesController {
     if (!status) {
       return response.notFound({ message: 'Status not found' })
     }
-
     await status.delete()
     return response.ok({ message: 'Status deleted successfully' })
   }

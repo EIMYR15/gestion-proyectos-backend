@@ -1,28 +1,29 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Comment from '#models/Comment'
+import { createCommentValidator, updateCommentValidator } from '#validators/comment'
 
 export default class CommentsController {
   // Get all comments
   async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
-    const query = Comment .query()
+    const query = Comment.query()
     if (withRelations.includes('user')) query.preload('user')
     if (withRelations.includes('task')) query.preload('task')
     const comments = await query
     return response.ok(comments)
   }
 
-  // Create a new comment
+  // Create a new comment (validating data)
   async store({ request, response }: HttpContext) {
-    const data = request.only(['userId', 'taskId', 'description'])
-    const comment = await Comment .create(data)
+    const payload = await request.validateUsing(createCommentValidator)
+    const comment = await Comment.create(payload)
     return response.created(comment)
   }
 
   // Get a single comment by ID
   async show({ params, request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
-    const query = Comment .query().where('id', params.id)
+    const query = Comment.query().where('id', params.id)
     if (withRelations.includes('user')) query.preload('user')
     if (withRelations.includes('task')) query.preload('task')
     const comment = await query.first()
@@ -32,27 +33,24 @@ export default class CommentsController {
     return response.ok(comment)
   }
 
-  // Update a comment by ID
+  // Update a comment by ID (validating data)
   async update({ params, request, response }: HttpContext) {
-    const comment = await Comment .find(params.id)
+    const comment = await Comment.find(params.id)
     if (!comment) {
       return response.notFound({ message: 'Comment not found' })
     }
-
-    const data = request.only(['userId', 'taskId', 'description'])
-    comment.merge(data)
+    const payload = await request.validateUsing(updateCommentValidator)
+    comment.merge(payload)
     await comment.save()
-
     return response.ok(comment)
   }
 
   // Delete a comment by ID
   async destroy({ params, response }: HttpContext) {
-    const comment = await Comment .find(params.id)
+    const comment = await Comment.find(params.id)
     if (!comment) {
       return response.notFound({ message: 'Comment not found' })
     }
-
     await comment.delete()
     return response.ok({ message: 'Comment deleted successfully' })
   }
