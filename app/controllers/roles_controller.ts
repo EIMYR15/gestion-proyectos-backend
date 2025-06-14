@@ -3,13 +3,42 @@ import Role from '#models/Role'
 import { createRoleValidator, updateRoleValidator } from '#validators/role'
 
 export default class RolesController {
-  // Get all roles
+  // Get all roles con filtros y paginación
   async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const title = (request.input('title') || '').trim().toLowerCase()
+    const search = (request.input('search') || '').trim().toLowerCase()
+    const page = Number(request.input('page')) || 1
+    const perPage = Number(request.input('per_page')) || 10
+
     const query = Role.query()
+
+    // Filtro por título (parcial)
+    if (title) {
+      query.whereRaw('LOWER(title) LIKE ?', [`%${title}%`])
+    }
+
+    // Filtro global por palabra clave (en title, description, permissions)
+    if (search) {
+      query.where((q) => {
+        q
+          .whereRaw('LOWER(title) LIKE ?', [`%${search}%`])
+          .orWhereRaw('LOWER(description) LIKE ?', [`%${search}%`])
+          .orWhereRaw('LOWER(permissions) LIKE ?', [`%${search}%`])
+      })
+    }
+
+    // Relaciones
     if (withRelations.includes('users')) query.preload('users')
-    const roles = await query
-    return response.ok(roles)
+
+    // Paginación
+    if (request.input('page') || request.input('per_page')) {
+      const roles = await query.paginate(page, perPage)
+      return response.ok(roles)
+    } else {
+      const roles = await query
+      return response.ok(roles)
+    }
   }
 
   // Create a new role

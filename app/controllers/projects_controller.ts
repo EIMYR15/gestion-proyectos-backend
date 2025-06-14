@@ -3,17 +3,45 @@ import Project from '#models/Project'
 import { createProjectValidator, updateProjectValidator } from '#validators/project'
 
 export default class ProjectsController {
-  // Get all projects
+  // Obtener todos los proyectos con filtro y paginación
   async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const search = (request.input('search') || '').trim().toLowerCase()
+    const userId = request.input('userId') // responsable
+    const page = Number(request.input('page')) || 1
+    const perPage = Number(request.input('per_page')) || 10
+
     const query = Project.query()
+
+    // Filtro por palabra clave (en título o descripción)
+    if (search) {
+      query.where((q) => {
+        q
+          .whereRaw('LOWER(title) LIKE ?', [`%${search}%`])
+          .orWhereRaw('LOWER(description) LIKE ?', [`%${search}%`])
+      })
+    }
+
+    // Filtro por responsable (userId)
+    if (userId) {
+      query.where('user_id', userId)
+    }
+
+    // Relaciones dinámicas
     if (withRelations.includes('user')) query.preload('user')
     if (withRelations.includes('status')) query.preload('status')
     if (withRelations.includes('client')) query.preload('client')
     if (withRelations.includes('historyStatuses')) query.preload('historyStatuses')
     if (withRelations.includes('tasks')) query.preload('tasks')
-    const projects = await query
-    return response.ok(projects)
+
+    // Paginación
+    if (request.input('page') || request.input('per_page')) {
+      const projects = await query.paginate(page, perPage)
+      return response.ok(projects)
+    } else {
+      const projects = await query
+      return response.ok(projects)
+    }
   }
 
   // Create a new project

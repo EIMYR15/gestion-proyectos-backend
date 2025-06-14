@@ -3,17 +3,45 @@ import Task from '#models/Task'
 import { createTaskValidator, updateTaskValidator } from '#validators/task'
 
 export default class TasksController {
-  // Get all tasks
+  // Obtener todas las tareas con filtros y paginación
   async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const search = (request.input('search') || '').trim().toLowerCase()
+    const userId = request.input('userId') // responsable
+    const page = Number(request.input('page')) || 1
+    const perPage = Number(request.input('per_page')) || 10
+
     const query = Task.query()
+
+    // Filtro por palabra clave (en título o descripción)
+    if (search) {
+      query.where((q) => {
+        q
+          .whereRaw('LOWER(title) LIKE ?', [`%${search}%`])
+          .orWhereRaw('LOWER(description) LIKE ?', [`%${search}%`])
+      })
+    }
+
+    // Filtro por responsable (userId)
+    if (userId) {
+      query.where('user_id', userId)
+    }
+
+    // Relaciones dinámicas
     if (withRelations.includes('project')) query.preload('project' as any)
     if (withRelations.includes('user')) query.preload('user' as any)
     if (withRelations.includes('priority')) query.preload('priority' as any)
     if (withRelations.includes('status')) query.preload('status' as any)
     if (withRelations.includes('comments')) query.preload('comments' as any)
-    const tasks = await query
-    return response.ok(tasks)
+
+    // Paginación
+    if (request.input('page') || request.input('per_page')) {
+      const tasks = await query.paginate(page, perPage)
+      return response.ok(tasks)
+    } else {
+      const tasks = await query
+      return response.ok(tasks)
+    }
   }
 
   // Create a new task
