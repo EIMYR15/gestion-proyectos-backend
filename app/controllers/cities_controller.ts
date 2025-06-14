@@ -6,10 +6,28 @@ export default class CitiesController {
   // Listar todas las ciudades
   public async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
+    const page = Number(request.input('page')) || 1
+    const perPage = Number(request.input('per_page')) || 10
+    const search = request.input('search', '').trim()
+
     const query = City.query()
-    if (withRelations.includes('users')) query.preload('users' as any)
-    const ciudades = await query
-    return response.ok(ciudades)
+
+    if (search) {
+      query.where('title', 'like', `%${search}%`)
+    }
+
+    if (withRelations.includes('users')) {
+      query.preload('users' as any)
+    }
+
+    // Si viene paginación, usar paginate
+    if (request.input('page') || request.input('per_page')) {
+      const ciudades = await query.paginate(page, perPage)
+      return response.ok(ciudades)
+    } else {
+      const ciudades = await query
+      return response.ok(ciudades)
+    }
   }
 
   // Crear una nueva ciudad (validando datos)

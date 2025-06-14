@@ -3,9 +3,14 @@ import Status from '#models/Status'
 import { createStatusValidator, updateStatusValidator } from '#validators/status'
 
 export default class StatusesController {
-  // Get all statuses
-  async index({ response }: HttpContext) {
-    const statuses = await Status.all()
+  // Get all statuses with optional filter by type
+  async index({ request, response }: HttpContext) {
+    const type = request.input('type')
+    let query = Status.query()
+    if (type) {
+      query = query.where('type', type)
+    }
+    const statuses = await query
     return response.ok(statuses)
   }
 
