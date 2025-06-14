@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Task from '#models/Task'
+import { createTaskValidator, updateTaskValidator } from '#validators/task'
 
 export default class TasksController {
   // Get all tasks
@@ -17,16 +18,8 @@ export default class TasksController {
 
   // Create a new task
   async store({ request, response }: HttpContext) {
-    const data = request.only([
-      'title',
-      'description',
-      'projectId',
-      'userId',
-      'priorityId',
-      'statusId',
-      'dueDate',
-    ])
-    const task = await Task.create(data)
+    const payload = await request.validateUsing(createTaskValidator)
+    const task = await Task.create(payload)
     return response.created(task)
   }
 
@@ -52,19 +45,9 @@ export default class TasksController {
     if (!task) {
       return response.notFound({ message: 'Task not found' })
     }
-
-    const data = request.only([
-      'title',
-      'description',
-      'projectId',
-      'userId',
-      'priorityId',
-      'statusId',
-      'dueDate',
-    ])
-    task.merge(data)
+    const payload = await request.validateUsing(updateTaskValidator)
+    task.merge(payload)
     await task.save()
-
     return response.ok(task)
   }
 
@@ -74,7 +57,6 @@ export default class TasksController {
     if (!task) {
       return response.notFound({ message: 'Task not found' })
     }
-
     await task.delete()
     return response.ok({ message: 'Task deleted successfully' })
   }

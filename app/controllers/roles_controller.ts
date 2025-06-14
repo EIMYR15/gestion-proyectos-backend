@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Role from '#models/Role'
+import { createRoleValidator, updateRoleValidator } from '#validators/role'
 
 export default class RolesController {
   // Get all roles
@@ -13,8 +14,8 @@ export default class RolesController {
 
   // Create a new role
   async store({ request, response }: HttpContext) {
-    const data = request.only(['title', 'description', 'permissions'])
-    const role = await Role.create(data)
+    const payload = await request.validateUsing(createRoleValidator)
+    const role = await Role.create(payload)
     return response.created(role)
   }
 
@@ -36,11 +37,9 @@ export default class RolesController {
     if (!role) {
       return response.notFound({ message: 'Role not found' })
     }
-
-    const data = request.only(['title', 'description', 'permissions'])
-    role.merge(data)
+    const payload = await request.validateUsing(updateRoleValidator)
+    role.merge(payload)
     await role.save()
-
     return response.ok(role)
   }
 
@@ -50,7 +49,6 @@ export default class RolesController {
     if (!role) {
       return response.notFound({ message: 'Role not found' })
     }
-
     await role.delete()
     return response.ok({ message: 'Role deleted successfully' })
   }

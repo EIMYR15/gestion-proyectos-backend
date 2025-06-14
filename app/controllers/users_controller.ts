@@ -1,10 +1,9 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import User from '#models/User'
+import { createUserValidator, updateUserValidator } from '#validators/user'
 
 export default class UsersController {
-  /**
-   * Obtener todos los usuarios
-   */
+  // Obtener todos los usuarios (con relaciones si se piden)
   async index({ request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(",").map((r: string) => r.trim()).filter(Boolean)
     const query = User.query()
@@ -15,35 +14,17 @@ export default class UsersController {
     return response.ok(users)
   }
 
-  /**
-   * Crear un nuevo usuario
-   */
+  // Crear un nuevo usuario (validando datos)
   async store({ request, response }: HttpContext) {
-    const data = request.only([
-      'typeDocumentId',
-      'document',
-      'firstName',
-      'lastName',
-      'telephone',
-      'cityId',
-      'email',
-      'username',
-      'password',
-    ])
-
-    const newUser = await User.create(data)
-
-    const roles = request.input('roles')
-    if (roles && Array.isArray(roles)) {
-      await newUser.related('roles').sync(roles)
+    const payload = await request.validateUsing(createUserValidator)
+    const newUser = await User.create(payload)
+    if (payload.roles && Array.isArray(payload.roles)) {
+      await newUser.related('roles').sync(payload.roles)
     }
-
     return response.created(newUser)
   }
 
-  /**
-   * Mostrar un usuario por ID
-   */
+  // Mostrar un usuario por ID (con relaciones si se piden)
   async show({ params, request, response }: HttpContext) {
     const withRelations = (request.input('with') || '').split(',').map((r: string) => r.trim()).filter(Boolean)
     const query = User.query().where('id', params.id)
@@ -57,48 +38,27 @@ export default class UsersController {
     return response.ok(user)
   }
 
-  /**
-   * Actualizar un usuario
-   */
+  // Actualizar un usuario (validando datos)
   async update({ params, request, response }: HttpContext) {
     const user = await User.find(params.id)
     if (!user) {
       return response.notFound({ message: 'Usuario no encontrado' })
     }
-
-    const data = request.only([
-      'typeDocumentId',
-      'document',
-      'firstName',
-      'lastName',
-      'telephone',
-      'email',
-      'username',
-      'password',
-      'cityId',
-    ])
-
-    user.merge(data)
-
+    const payload = await request.validateUsing(updateUserValidator)
+    user.merge(payload)
     await user.save()
-
-    const roles = request.input('roles')
-    if (roles && Array.isArray(roles)) {
-      await user.related('roles').sync(roles)
+    if (payload.roles && Array.isArray(payload.roles)) {
+      await user.related('roles').sync(payload.roles)
     }
-
     return response.ok(user)
   }
 
-  /**
-   * Eliminar un usuario
-   */
+  // Eliminar un usuario
   async destroy({ params, response }: HttpContext) {
     const user = await User.find(params.id)
     if (!user) {
       return response.notFound({ message: 'Usuario no encontrado' })
     }
-
     await user.delete()
     return response.noContent()
   }

@@ -1,5 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import City from '#models/City'
+import { createCityValidator, updateCityValidator } from '#validators/city'
 
 export default class CitiesController {
   // Listar todas las ciudades
@@ -11,10 +12,10 @@ export default class CitiesController {
     return response.ok(ciudades)
   }
 
-  // Crear una nueva ciudad
+  // Crear una nueva ciudad (validando datos)
   public async store({ request, response }: HttpContext) {
-    const data = request.only(['title'])
-    const ciudad = await City.create(data)
+    const payload = await request.validateUsing(createCityValidator)
+    const ciudad = await City.create(payload)
     return response.created(ciudad)
   }
 
@@ -30,15 +31,14 @@ export default class CitiesController {
     return response.ok(ciudadResult)
   }
 
-  // Actualizar una ciudad por ID
+  // Actualizar una ciudad por ID (validando datos)
   public async update({ params, request, response }: HttpContext) {
     const ciudad = await City.find(params.id)
     if (!ciudad) {
       return response.notFound({ message: 'Ciudad no encontrada' })
     }
-
-    const data = request.only(['title'])
-    ciudad.merge(data)
+    const payload = await request.validateUsing(updateCityValidator)
+    ciudad.merge(payload)
     await ciudad.save()
     return response.ok(ciudad)
   }
@@ -49,7 +49,6 @@ export default class CitiesController {
     if (!ciudad) {
       return response.notFound({ message: 'Ciudad no encontrada' })
     }
-
     await ciudad.delete()
     return response.ok({ message: 'Ciudad eliminada correctamente' })
   }
