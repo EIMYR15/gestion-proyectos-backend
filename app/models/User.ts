@@ -52,6 +52,14 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 
+  @column({
+    columnName: 'permissions',
+    serializeAs: 'permissions',
+    prepare: (value: Record<string, boolean> | null) => JSON.stringify(value ?? {}),
+    consume: (value: string | null) => (value ? JSON.parse(value) : null),
+  })
+  declare permissions: Record<string, boolean> | null
+
   @belongsTo(() => TypeDocument, {
     foreignKey: 'typeDocumentId',
   })
@@ -78,4 +86,39 @@ export default class User extends compose(BaseModel, AuthFinder) {
     type: 'auth_token',
     tokenSecretLength: 40,
   })
+
+  /**
+   * Get all effective permissions for the user (roles merged, user has priority)
+   */
+  async getAllowedPermissions(this: User): Promise<Record<string, true>> {
+    if (!this.$preloaded?.roles) {
+      await this.load('roles')
+    }
+    const allowed: Record<string, true> = {}
+
+    // Merge from roles
+    for (const role of this.roles || []) {
+      for (const [perm, value] of Object.entries(role.permissions || {})) {
+        if (value) allowed[perm] = true
+      }
+    }
+
+    // Merge from user and override
+    for (const [perm, value] of Object.entries(this.permissions || {})) {
+      if (value) allowed[perm] = true
+      else if (perm in allowed && !value) delete allowed[perm]
+    }
+
+    return allowed
+  }
+
+
+
+  /**
+   * Check if user has a specific permission
+   */
+  async hasPermission(permission: string): Promise<boolean> {
+    const perms = await this.getAllowedPermissions()
+    return !!perms[permission]
+  }
 }

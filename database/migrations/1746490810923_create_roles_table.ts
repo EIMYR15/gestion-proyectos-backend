@@ -9,7 +9,7 @@ export default class extends BaseSchema {
 
       table.string('title').notNullable()
       table.string('description').notNullable()
-      table.string('permissions').notNullable()
+      table.json('permissions').defaultTo('{}')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

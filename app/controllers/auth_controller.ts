@@ -7,6 +7,8 @@ export default class AuthController {
     const { email, password } = request.only(['email', 'password'])
     const user = await User.verifyCredentials(email, password)
     const token = await auth.use('api').createToken(user)
-    return response.ok({ user, token })
+    const userData = user.serialize()
+    userData.allowedPermissions = user.getAllowedPermissions()
+    return response.ok({ user: userData, token })
   }
 }
