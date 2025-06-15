@@ -5,7 +5,13 @@ export default class TypeDocumentSeeder extends BaseSeeder {
     public async run() {
         await TypeDocument.createMany([
             { abbreviation: 'CC', title: 'Cédula de Ciudadanía' },
-            { abbreviation: 'TI', title: 'Tarjeta de Identidad' },
+            { abbreviation: 'CE', title: 'Cédula de Extranjería' },
+            { abbreviation: 'PA', title: 'Pasaporte' },
+            { abbreviation: 'RC', title: 'Registro Civil' },
+            { abbreviation: 'PEP', title: 'Permiso Especial de Permanencia' },
+            { abbreviation: 'NIT', title: 'Número de Identificación Tributaria' },
+            { abbreviation: 'NUIP', title: 'Número Único de Identificación Personal' },
+            { abbreviation: 'DNI', title: 'Documento Nacional de Identidad' }
         ])
     }
 }

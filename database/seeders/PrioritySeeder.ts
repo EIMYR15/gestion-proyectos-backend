@@ -4,8 +4,12 @@ import Priority from '#models/Priority'
 export default class PrioritySeeder extends BaseSeeder {
   public async run() {
     await Priority.createMany([
-      { title: 'High', description: 'High priority', type: 'task' },
-      { title: 'Low', description: 'Low priority', type: 'project' },
+      { title: 'Alta', description: 'Prioridad alta', type: 'tarea' },
+      { title: 'Media', description: 'Prioridad media', type: 'tarea' },
+      { title: 'Baja', description: 'Prioridad baja', type: 'tarea' },
+      { title: 'Alta', description: 'Prioridad alta', type: 'proyecto' },
+      { title: 'Media', description: 'Prioridad media', type: 'proyecto' },
+      { title: 'Baja', description: 'Prioridad baja', type: 'proyecto' },
     ])
   }
 }
