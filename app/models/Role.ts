@@ -13,8 +13,13 @@ export default class Role extends BaseModel {
   @column({ columnName: 'description' })
   declare description: string
 
-  @column({ columnName: 'permissions' })
-  declare permissions: string
+  @column({
+    columnName: 'permissions',
+    serializeAs: 'permissions',
+    prepare: (value: Record<string, boolean> | null) => JSON.stringify(value ?? {}),
+    consume: (value: string | null) => value ? JSON.parse(value) : null
+  })
+  declare permissions: Record<string, boolean> | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

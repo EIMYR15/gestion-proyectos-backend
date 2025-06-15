@@ -1,4 +1,5 @@
 import vine from '@vinejs/vine'
+import { permissionsSchema } from '../../config/permissions.js'
 
 export const createUserValidator = vine.compile(
   vine.object({
@@ -9,9 +10,9 @@ export const createUserValidator = vine.compile(
     telephone: vine.number(),
     cityId: vine.number(),
     email: vine.string().trim().email(),
-    //username: vine.string().trim(),
     password: vine.string().minLength(8),
     roles: vine.array(vine.number()).optional(),
+    permissions: permissionsSchema.optional(),
   })
 )
 
@@ -24,8 +25,8 @@ export const updateUserValidator = vine.compile(
     telephone: vine.number().optional(),
     cityId: vine.number().optional(),
     email: vine.string().trim().email().optional(),
-    //username: vine.string().trim().optional(),
     password: vine.string().minLength(8).optional(),
     roles: vine.array(vine.number()).optional(),
+    permissions: permissionsSchema.optional(),
   })
 )

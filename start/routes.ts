@@ -19,12 +19,20 @@ const TasksController = () => import('#controllers/tasks_controller')
 const PrioritiesController = () => import('#controllers/priorities_controller')
 const TypesDocumentsController = () => import('#controllers/type_documents_controller')
 const AuthController = () => import('#controllers/auth_controller')
+const AppController = () => import('#controllers/app_controller')
 
 router.get('/', async () => {
   return {
     hello: 'world',
   }
 })
+
+//Users Route (rutas de usuarios)
+router
+  .group(() => {
+    router.get('/permissions', [AppController, 'getPermissions'])
+  })
+  .prefix('/api/app')
 
 //Users Route (rutas de usuarios)
 router
@@ -40,7 +48,7 @@ router
 // Rutas de Roles
 router
   .group(() => {
-    router.get('/', [RolesController, 'index'])
+    router.get('/', [RolesController, 'index']).use(middleware.auth_can(['role:read']))
     router.post('/', [RolesController, 'store'])
     router.get('/:id', [RolesController, 'show'])
     router.put('/:id', [RolesController, 'update'])

@@ -15,6 +15,7 @@ export default class extends BaseSchema {
       table.string('password').notNullable()
       table.bigInteger('telephone').notNullable().unsigned()
       table.integer('city_id').unsigned().references('id').inTable('cities')
+      table.json('permissions').defaultTo('{}')
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()
