@@ -37,7 +37,7 @@ router
 //Users Route (rutas de usuarios)
 router
   .group(() => {
-    router.get('/', [UsersController, 'index'])//.use(middleware.auth({ guards: ['api'] }))
+    router.get('/', [UsersController, 'index'])
     router.post('/', [UsersController, 'store'])
     router.get('/:id', [UsersController, 'show'])
     router.put('/:id', [UsersController, 'update'])
@@ -132,6 +132,6 @@ router
 router
   .group(() => {
     router.post('/login', [AuthController, 'login'])
-    // router.post('/reset-password', [AuthController, 'resetPassword'])
+    router.get('/me', [AuthController, 'me']).use(middleware.auth({ guards: ['api'] }))
   })
   .prefix('/api/auth')
