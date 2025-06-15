@@ -292,7 +292,7 @@ export default class UserSeeder extends BaseSeeder {
         email: 'victoria.mora@example.com',
         password: 'password999',
         telephone: 3356789012,
-        cityId: 29,
+        cityId: 28,
       },
       {
         typeDocumentId: 6,
@@ -302,7 +302,7 @@ export default class UserSeeder extends BaseSeeder {
         email: 'emilio.guerrero@example.com',
         password: 'password000',
         telephone: 3367890123,
-        cityId: 30,
+        cityId: 28,
       }
     ])
   }
