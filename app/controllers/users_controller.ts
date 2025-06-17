@@ -28,7 +28,7 @@ export default class UsersController {
     // Filtro por rol (por nombre)
     if (role) {
       query.whereHas('roles', (roleQuery) => {
-        roleQuery.where('title', role)
+        roleQuery.where('roles.id', role)
       })
     }
 
