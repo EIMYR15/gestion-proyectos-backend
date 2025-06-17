@@ -9,10 +9,10 @@ export default class UserSeeder extends BaseSeeder {
         document: 1234567890,
         firstName: 'Juan',
         lastName: 'Pérez',
-        email: 'juan.perez@example.com',
-        password: 'password123',
+        email: 'admin@mail.com',
+        password: '123456789',
         telephone: 3001234567,
-        cityId: 1,
+        cityId: 1
       },
       {
         typeDocumentId: 2,
