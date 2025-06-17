@@ -13,7 +13,7 @@ export default class RolesController {
 
     const query = Role.query()
 
-    // Filtro por título (parcial)
+    // Filtro por título (parcial, insensible a mayúsculas/minúsculas)
     if (title) {
       query.whereRaw('LOWER(title) LIKE ?', [`%${title}%`])
     }

@@ -20,18 +20,15 @@ export default class UsersController {
           .whereRaw('LOWER(first_name) LIKE ?', [`%${search}%`])
           .orWhereRaw('LOWER(last_name) LIKE ?', [`%${search}%`])
           .orWhereRaw('LOWER(email) LIKE ?', [`%${search}%`])
-          .orWhereRaw('LOWER(username) LIKE ?', [`%${search}%`])
-          .orWhereRaw('CAST(document AS TEXT) LIKE ?', [`%${search}%`])
-          .orWhereRaw('CAST(telephone AS TEXT) LIKE ?', [`%${search}%`])
+          .orWhereRaw('CAST(document AS CHAR) LIKE ?', [`%${search}%`])
+          .orWhereRaw('CAST(telephone AS CHAR) LIKE ?', [`%${search}%`])
       })
     }
 
-    // Filtro por rol (por id)
+    // Filtro por rol (por nombre)
     if (role) {
       query.whereHas('roles', (roleQuery) => {
-        // Si envías el id del rol
-        roleQuery.where('title', role)  
-        // Si quieres buscar por nombre de rol, usa: roleQuery.where('title', role)
+        roleQuery.where('title', role)
       })
     }
 
