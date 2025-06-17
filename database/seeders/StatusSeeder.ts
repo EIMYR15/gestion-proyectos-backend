@@ -4,18 +4,18 @@ import Status from '#models/Status'
 export default class StatusSeeder extends BaseSeeder {
   public async run() {
     await Status.createMany([
-      // Estados para tareas (type: 'tarea')
-      { title: 'Por Hacer', description: 'La tarea está abierta', type: 'task' },
-      { title: 'En Progreso', description: 'La tarea está en progreso', type: 'task' },
-      { title: 'En Revisión', description: 'La tarea está en revisión', type: 'task' },
-      { title: 'Completada', description: 'La tarea está cerrada', type: 'task' },
+      // Estados para tareas (type: 'task')
+      { title: 'To-Do', description: 'Task is open', type: 'task' },
+      { title: 'In Progress', description: 'Task is in progress', type: 'task' },
+      { title: 'Review', description: 'Task is under review', type: 'task' },
+      { title: 'Complete', description: 'Task is closed', type: 'task' },
 
-      // Estados para proyectos (type: 'proyecto')
-      { title: 'Activo', description: 'El proyecto está activo', type: 'project' },
-      { title: 'En Progreso', description: 'El proyecto está en pausa', type: 'project' },
-      { title: 'Completado', description: 'El proyecto está completado', type: 'project' },
-      { title: 'Archivado', description: 'El proyecto está archivado', type: 'project' },
-      { title: 'Cancelado', description: 'El proyecto ha sido cancelado', type: 'project' },
+      // Estados para proyectos (type: 'project')
+      { title: 'Active', description: 'Project is active', type: 'project' },
+      { title: 'In Progress', description: 'Project is paused', type: 'project' },
+      { title: 'Completed', description: 'Project is completed', type: 'project' },
+      { title: 'Archived', description: 'Project is archived', type: 'project' },
+      { title: 'Cancelled', description: 'Project is cancelled', type: 'project' },
     ])
   }
 }
