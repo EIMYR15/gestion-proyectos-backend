@@ -9,8 +9,8 @@ export default class TaskSeeder extends BaseSeeder {
   description: 'Análisis inicial',
   projectId: 1,
   userId: 1,
-  priorityId: 1,
-  statusId: 1,
+  priorityId: 1, // 1-3
+  statusId: 1,   // 1-4
   dueDate: new Date('2025-02-15'),
 },
 {
