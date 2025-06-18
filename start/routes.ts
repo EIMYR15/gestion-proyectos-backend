@@ -32,7 +32,9 @@ router.get('/', async () => {
 router
   .group(() => {
     router.get('/permissions', [AppController, 'getPermissions'])
+   router.get('/dashboard', [AppController, 'getDashboard'])
   })
+  
   .prefix('/api/app')
 
 // Usuarios
