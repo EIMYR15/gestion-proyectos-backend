@@ -123,11 +123,11 @@ router
 // Rutas de tipos de documentos
 router
   .group(() => {
-    router.get('/', [TypesDocumentsController, 'index']).use(middleware.auth_can(['type_document:read']))
-    router.post('/', [TypesDocumentsController, 'store']).use(middleware.auth_can(['type_document:create']))
-    router.get('/:id', [TypesDocumentsController, 'show']).use(middleware.auth_can(['type_document:read']))
-    router.put('/:id', [TypesDocumentsController, 'update']).use(middleware.auth_can(['type_document:update']))
-    router.delete('/:id', [TypesDocumentsController, 'destroy']).use(middleware.auth_can(['type_document:delete']))
+    router.get('/', [TypesDocumentsController, 'index']).use(middleware.auth_can(['typeDocument:read']))
+    router.post('/', [TypesDocumentsController, 'store']).use(middleware.auth_can(['typeDocument:create']))
+    router.get('/:id', [TypesDocumentsController, 'show']).use(middleware.auth_can(['typeDocument:read']))
+    router.put('/:id', [TypesDocumentsController, 'update']).use(middleware.auth_can(['typeDocument:update']))
+    router.delete('/:id', [TypesDocumentsController, 'destroy']).use(middleware.auth_can(['typeDocument:delete']))
   })
   .prefix('/api/types_documents')
 
